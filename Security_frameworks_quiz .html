@@ -1,0 +1,416 @@
+<div id="app"></div>
+<style>
+  :root{
+    --bg-deep:#0a0e13;
+    --bg-panel:#121820;
+    --bg-panel-2:#161d27;
+    --border:#212b36;
+    --text:#dde6ee;
+    --text-muted:#7d8b98;
+    --teal:#4fd1c5;    /* STRIDE */
+    --violet:#a78bfa;  /* PASTA */
+    --amber:#f0a860;   /* DREAD */
+    --green:#7bc67e;   /* BSIMM */
+    --rose:#e893b3;    /* SAMM */
+    --danger:#e2635f;
+    --ok:#7bc67e;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  #app{
+    background:var(--bg-deep);
+    color:var(--text);
+    font-family:var(--sans);
+    padding:0;
+    min-height:100%;
+    max-width:760px;
+    margin:0 auto;
+  }
+  .header{
+    padding:28px 24px 18px;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    background:var(--bg-deep);
+    z-index:5;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:var(--mono);
+    font-size:20px;
+    margin:0 0 14px 0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .gauge-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .gauge-track{
+    flex:1;
+    height:6px;
+    background:var(--bg-panel-2);
+    border-radius:3px;
+    overflow:hidden;
+    position:relative;
+    border:1px solid var(--border);
+  }
+  .gauge-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--teal), var(--violet));
+    transition:width 0.35s ease;
+  }
+  .gauge-label{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+    white-space:nowrap;
+    min-width:64px;
+    text-align:right;
+  }
+  .legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+  }
+  .chip{
+    font-family:var(--mono);
+    font-size:10px;
+    padding:3px 8px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    letter-spacing:0.03em;
+  }
+  .chip-STRIDE{color:var(--teal); border-color:rgba(79,209,197,0.3);}
+  .chip-PASTA{color:var(--violet); border-color:rgba(167,139,250,0.3);}
+  .chip-DREAD{color:var(--amber); border-color:rgba(240,168,96,0.3);}
+  .chip-BSIMM{color:var(--green); border-color:rgba(123,198,126,0.3);}
+  .chip-SAMM{color:var(--rose); border-color:rgba(232,147,179,0.3);}
+
+  .q-card{
+    padding:22px 24px;
+    border-bottom:1px solid var(--border);
+  }
+  .q-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .q-num{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+  }
+  .q-text{
+    font-size:15px;
+    line-height:1.5;
+    margin:0 0 14px 0;
+    color:var(--text);
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .opt{
+    text-align:left;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:11px 14px;
+    border-radius:8px;
+    font-size:13.5px;
+    cursor:pointer;
+    font-family:var(--sans);
+    transition:border-color 0.15s ease, background 0.15s ease;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .opt:hover:not(:disabled){
+    border-color:#33404d;
+    background:var(--bg-panel-2);
+  }
+  .opt:disabled{cursor:default;}
+  .opt-letter{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+    min-width:14px;
+    padding-top:1px;
+  }
+  .opt.correct{
+    border-color:var(--ok);
+    background:rgba(123,198,126,0.08);
+  }
+  .opt.correct .opt-letter{color:var(--ok);}
+  .opt.incorrect{
+    border-color:var(--danger);
+    background:rgba(226,99,95,0.08);
+  }
+  .opt.incorrect .opt-letter{color:var(--danger);}
+  .opt.dim{opacity:0.45;}
+
+  .explain{
+    margin-top:12px;
+    padding:11px 13px;
+    border-radius:8px;
+    background:var(--bg-panel-2);
+    border-left:2px solid var(--teal);
+    font-size:12.5px;
+    line-height:1.55;
+    color:var(--text-muted);
+  }
+  .explain b{color:var(--text);}
+
+  .summary{
+    padding:32px 24px 40px;
+    text-align:center;
+  }
+  .summary h2{
+    font-family:var(--mono);
+    font-size:22px;
+    margin-bottom:6px;
+  }
+  .summary .score-big{
+    font-family:var(--mono);
+    font-size:44px;
+    font-weight:700;
+    margin:14px 0 4px;
+    background:linear-gradient(90deg, var(--teal), var(--violet));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .summary .score-sub{
+    color:var(--text-muted);
+    font-size:13px;
+    margin-bottom:26px;
+  }
+  .breakdown{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    text-align:left;
+    margin-bottom:28px;
+  }
+  .bd-item{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:12px 14px;
+  }
+  .bd-name{
+    font-family:var(--mono);
+    font-size:12px;
+    margin-bottom:6px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .bd-bar-track{
+    height:5px;
+    background:var(--bg-panel-2);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .bd-bar-fill{height:100%;border-radius:3px;}
+  .restart-btn{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:10px 22px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .restart-btn:hover{border-color:var(--teal); color:var(--teal);}
+  .cheat{
+    padding:20px 24px 8px;
+  }
+  .cheat h3{
+    font-family:var(--mono);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.1em;
+    color:var(--text-muted);
+    margin-bottom:12px;
+  }
+  .cheat-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12.5px;
+  }
+  .cheat-table td{
+    padding:8px 6px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  .cheat-table td:first-child{
+    font-family:var(--mono);
+    font-weight:600;
+    white-space:nowrap;
+    padding-right:14px;
+  }
+</style>
+
+<script>
+const QUESTIONS = [
+  {cat:"STRIDE", q:"STRIDE is primarily used for which purpose?", opts:["Scoring the severity of a known risk","Categorizing types of security threats","Measuring an organization's security maturity","Simulating an attacker's business impact"], correct:1, explain:"<b>STRIDE</b> is a threat-categorization framework — it gives you six buckets to sort threats into during design review."},
+  {cat:"STRIDE", q:"What does the 'S' in STRIDE stand for?", opts:["Sabotage","Spoofing","Scanning","Session hijacking"], correct:1, explain:"<b>Spoofing</b> — pretending to be someone or something else, like forging another user's identity."},
+  {cat:"STRIDE", q:"An attacker modifies data in transit without authorization. Which STRIDE category is this?", opts:["Tampering","Repudiation","Spoofing","Elevation of Privilege"], correct:0, explain:"<b>Tampering</b> covers unauthorized modification of data or code."},
+  {cat:"STRIDE", q:"A user performs an action, then denies having done it, and there's no log to prove otherwise. Which STRIDE category?", opts:["Information Disclosure","Denial of Service","Repudiation","Tampering"], correct:2, explain:"<b>Repudiation</b> is about the ability to deny an action due to insufficient proof/logging."},
+  {cat:"STRIDE", q:"Exposing data to someone not authorized to see it maps to which STRIDE letter?", opts:["I — Information Disclosure","D — Denial of Service","E — Elevation of Privilege","T — Tampering"], correct:0, explain:"<b>Information Disclosure</b> is exactly that: confidential data reaching the wrong eyes."},
+  {cat:"STRIDE", q:"Flooding a server with requests so real users can't get through is which STRIDE category?", opts:["Spoofing","Denial of Service","Repudiation","Information Disclosure"], correct:1, explain:"<b>Denial of Service</b> — degrading or blocking availability for legitimate users."},
+  {cat:"STRIDE", q:"A regular user exploits a bug to gain admin rights. Which STRIDE category?", opts:["Elevation of Privilege","Tampering","Spoofing","Denial of Service"], correct:0, explain:"<b>Elevation of Privilege</b> — gaining capabilities beyond what was authorized."},
+  {cat:"STRIDE", q:"STRIDE is most naturally applied at which point in a project?", opts:["After a breach, during forensics","During design, while diagramming data flows","Only during executive risk reporting","During employee onboarding"], correct:1, explain:"STRIDE is typically walked through against a data-flow diagram during the <b>design phase</b>, before code is written."},
+
+  {cat:"DREAD", q:"DREAD is best described as a framework for:", opts:["Threat categorization","Risk scoring / prioritization","Organizational maturity benchmarking","End-to-end threat modeling process"], correct:1, explain:"<b>DREAD</b> takes threats you've already identified (e.g. via STRIDE) and scores them for prioritization."},
+  {cat:"DREAD", q:"Which of these is NOT one of the five DREAD criteria?", opts:["Damage","Discoverability","Detectability","Exploitability"], correct:2, explain:"The five are Damage, Reproducibility, Exploitability, Affected users, Discoverability — 'Detectability' isn't one of them."},
+  {cat:"DREAD", q:"In DREAD, 'Affected users' refers to:", opts:["How many people worked on the fix","How widely a successful exploit would impact users","How many testers found the bug","How many users reported the issue"], correct:1, explain:"It estimates the <b>scope of impact</b> across the user base if the threat is realized."},
+  {cat:"DREAD", q:"You've already listed a dozen threats using STRIDE and need to decide which to fix first. What do you reach for?", opts:["BSIMM","SAMM","DREAD","PASTA"], correct:2, explain:"<b>DREAD</b> is purpose-built to rank identified threats by relative risk."},
+  {cat:"DREAD", q:"'Reproducibility' in DREAD asks:", opts:["How easy is it to repeat the attack reliably?","How many times has this bug appeared in code review?","How well documented is the exploit?","How reversible is the damage?"], correct:0, explain:"It measures how consistently an attacker can trigger the exploit."},
+
+  {cat:"PASTA", q:"PASTA stands for:", opts:["Process for Attack Simulation and Threat Analysis","Practical Assessment of Security Threats and Attacks","Prioritized Attack Surface Threat Analysis","Protocol for Application Security Testing and Auditing"], correct:0, explain:"<b>P</b>rocess for <b>A</b>ttack <b>S</b>imulation and <b>T</b>hreat <b>A</b>nalysis."},
+  {cat:"PASTA", q:"What is PASTA's key differentiator versus STRIDE?", opts:["It only applies to cloud infrastructure","It's a full risk-centric, attacker-focused process rather than a category checklist","It replaces the need for any risk scoring","It's exclusively for compliance audits"], correct:1, explain:"PASTA is a multi-stage <b>process</b> that ties technical threats back to business impact and simulates attacker behavior, rather than just labeling threat types."},
+  {cat:"PASTA", q:"Which best fits a scenario where leadership wants threat modeling explicitly tied to business risk and attacker simulation, not just a technical checklist?", opts:["STRIDE","DREAD","PASTA","BSIMM"], correct:2, explain:"<b>PASTA</b> was designed to align technical threat modeling with business objectives and risk."},
+  {cat:"PASTA", q:"PASTA is generally considered:", opts:["Lighter-weight than STRIDE","A more exhaustive, multi-stage methodology than STRIDE","A scoring rubric only","An organizational maturity model"], correct:1, explain:"PASTA involves multiple structured stages (defining objectives, scope, decomposing the app, attack modeling, vulnerability/risk analysis) — it's heavier-weight than STRIDE's category walkthrough."},
+
+  {cat:"BSIMM", q:"BSIMM stands for:", opts:["Basic Security Implementation Model","Building Security In Maturity Model","Baseline Security Integration Maturity Measure","Best-practice Security Impact Maturity Matrix"], correct:1, explain:"<b>B</b>uilding <b>S</b>ecurity <b>I</b>n <b>M</b>aturity <b>M</b>odel."},
+  {cat:"BSIMM", q:"BSIMM's defining characteristic is that it:", opts:["Prescribes an ideal maturity model to follow","Is descriptive — built from observed data across real security programs","Categorizes threats by type","Scores individual bugs by exploitability"], correct:1, explain:"BSIMM is <b>descriptive</b>: it's derived from measuring what real organizations actually do, not a prescribed ideal."},
+  {cat:"BSIMM", q:"You want to benchmark your security program against what similar real companies are actually doing. You'd look at:", opts:["DREAD","BSIMM","STRIDE","PASTA"], correct:1, explain:"<b>BSIMM</b> is a benchmarking tool built from studying real-world security initiatives."},
+
+  {cat:"SAMM", q:"SAMM stands for:", opts:["Software Assurance Maturity Model","Security Application Maturity Method","Systematic Assessment of Malicious Metrics","Standard Assurance Management Model"], correct:0, explain:"<b>S</b>oftware <b>A</b>ssurance <b>M</b>aturity <b>M</b>odel (an OWASP project)."},
+  {cat:"SAMM", q:"How does SAMM differ from BSIMM in approach?", opts:["SAMM is descriptive, BSIMM is prescriptive","SAMM is prescriptive, BSIMM is descriptive (data-driven)","They are functionally identical","SAMM only scores individual vulnerabilities"], correct:1, explain:"<b>SAMM</b> prescribes a target model/roadmap to follow; <b>BSIMM</b> describes what's observed in practice."},
+  {cat:"SAMM", q:"A team with no formal security program wants a roadmap of practices to adopt, in order, to build one. Which framework fits best?", opts:["DREAD","STRIDE","SAMM","PASTA"], correct:2, explain:"SAMM is <b>prescriptive</b> — it lays out a structured path of practices to mature toward."},
+
+  {cat:"General", q:"Which pairing correctly matches framework to its category?", opts:["STRIDE = maturity assessment","PASTA = risk scoring","BSIMM = threat categorization","DREAD = risk scoring"], correct:3, explain:"DREAD's job is <b>risk scoring</b>. STRIDE categorizes, PASTA is a full process, BSIMM/SAMM assess maturity."},
+  {cat:"General", q:"Which two frameworks are about organizational/program maturity rather than individual threats?", opts:["STRIDE and DREAD","BSIMM and SAMM","PASTA and STRIDE","DREAD and PASTA"], correct:1, explain:"<b>BSIMM</b> and <b>SAMM</b> both assess maturity of a security program as a whole — one descriptively, one prescriptively."},
+  {cat:"General", q:"A natural end-to-end workflow for a single application might be:", opts:["Use SAMM to find bugs, then STRIDE to fix your org","Use STRIDE to identify threats, DREAD to prioritize them, and BSIMM/SAMM to mature the overall program over time","Use DREAD to categorize threats, then PASTA to score them","Use BSIMM to identify threats, then SAMM to score them"], correct:1, explain:"A common flow: <b>STRIDE</b> to find threats → <b>DREAD</b> (or PASTA's own risk analysis) to prioritize → <b>BSIMM/SAMM</b> to grow the program's maturity over time."},
+  {cat:"General", q:"If someone says 'this framework is a full methodology with stages like defining business objectives, decomposing the application, and simulating attacks,' they're describing:", opts:["STRIDE","DREAD","PASTA","SAMM"], correct:2, explain:"That staged, end-to-end approach is the signature of <b>PASTA</b>."}
+];
+
+const CAT_ORDER = ["STRIDE","PASTA","DREAD","BSIMM","SAMM"];
+
+let answered = new Array(QUESTIONS.length).fill(null);
+
+function render(){
+  const app = document.getElementById('app');
+  const answeredCount = answered.filter(a=>a!==null).length;
+  const correctCount = answered.filter((a,i)=>a===QUESTIONS[i].correct).length;
+  const pct = Math.round((answeredCount/QUESTIONS.length)*100);
+
+  let html = `
+    <div class="header">
+      <div class="eyebrow">Threat Modeling &amp; Assurance Frameworks</div>
+      <h1>STRIDE · PASTA · DREAD · BSIMM · SAMM — 25 Question Assessment</h1>
+      <div class="gauge-row">
+        <div class="gauge-track"><div class="gauge-fill" style="width:${pct}%"></div></div>
+        <div class="gauge-label">${answeredCount}/${QUESTIONS.length} answered</div>
+      </div>
+      <div class="legend">
+        <span class="chip chip-STRIDE">STRIDE — categorize</span>
+        <span class="chip chip-PASTA">PASTA — process</span>
+        <span class="chip chip-DREAD">DREAD — score</span>
+        <span class="chip chip-BSIMM">BSIMM — measure (descriptive)</span>
+        <span class="chip chip-SAMM">SAMM — prescribe</span>
+      </div>
+    </div>
+  `;
+
+  QUESTIONS.forEach((item, i)=>{
+    const userAns = answered[i];
+    const isAnswered = userAns !== null;
+    html += `<div class="q-card">
+      <div class="q-top">
+        <span class="q-num">Q${i+1}</span>
+        <span class="chip chip-${item.cat}">${item.cat}</span>
+      </div>
+      <p class="q-text">${item.q}</p>
+      <div class="options">`;
+    item.opts.forEach((opt,j)=>{
+      let cls = "opt";
+      if(isAnswered){
+        if(j===item.correct) cls += " correct";
+        else if(j===userAns) cls += " incorrect";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${isAnswered?"disabled":""} onclick="selectAnswer(${i},${j})">
+        <span class="opt-letter">${String.fromCharCode(65+j)}</span><span>${opt}</span>
+      </button>`;
+    });
+    html += `</div>`;
+    if(isAnswered){
+      html += `<div class="explain">${item.explain}</div>`;
+    }
+    html += `</div>`;
+  });
+
+  if(answeredCount === QUESTIONS.length){
+    const scorePct = Math.round((correctCount/QUESTIONS.length)*100);
+    html += `<div class="summary">
+      <div class="eyebrow">Assessment Complete</div>
+      <h2>Final Score</h2>
+      <div class="score-big">${correctCount}/${QUESTIONS.length}</div>
+      <div class="score-sub">${scorePct}% correct</div>
+      <div class="breakdown">`;
+    CAT_ORDER.forEach(cat=>{
+      const idxs = QUESTIONS.map((q,i)=>q.cat===cat?i:-1).filter(i=>i>=0);
+      const c = idxs.filter(i=>answered[i]===QUESTIONS[i].correct).length;
+      const total = idxs.length;
+      const p = total? Math.round((c/total)*100):0;
+      const colorVar = "var(--"+({STRIDE:"teal",PASTA:"violet",DREAD:"amber",BSIMM:"green",SAMM:"rose"}[cat])+")";
+      html += `<div class="bd-item">
+        <div class="bd-name"><span>${cat}</span><span style="color:${colorVar}">${c}/${total}</span></div>
+        <div class="bd-bar-track"><div class="bd-bar-fill" style="width:${p}%;background:${colorVar}"></div></div>
+      </div>`;
+    });
+    html += `</div>
+      <button class="restart-btn" onclick="restart()">Retake assessment</button>
+    </div>
+
+    <div class="cheat">
+      <h3>Quick-reference cheat sheet</h3>
+      <table class="cheat-table">
+        <tr><td style="color:var(--teal)">STRIDE</td><td>Categorize threats by type during design (Spoofing, Tampering, Repudiation, Info Disclosure, DoS, Elevation of Privilege).</td></tr>
+        <tr><td style="color:var(--violet)">PASTA</td><td>Full 7-stage, attacker-centric process linking threats to business risk.</td></tr>
+        <tr><td style="color:var(--amber)">DREAD</td><td>Score/prioritize threats you've already found (Damage, Reproducibility, Exploitability, Affected users, Discoverability).</td></tr>
+        <tr><td style="color:var(--green)">BSIMM</td><td>Descriptive maturity benchmark — "here's what real companies actually do."</td></tr>
+        <tr><td style="color:var(--rose)">SAMM</td><td>Prescriptive maturity model — "here's the roadmap to follow."</td></tr>
+      </table>
+    </div>`;
+  }
+
+  app.innerHTML = html;
+  if(answeredCount === QUESTIONS.length){
+    // scroll to summary smoothly once, no repeated jumps
+  }
+}
+
+function selectAnswer(qIndex, optIndex){
+  if(answered[qIndex] !== null) return;
+  answered[qIndex] = optIndex;
+  render();
+}
+
+function restart(){
+  answered = new Array(QUESTIONS.length).fill(null);
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+render();
+</script>
