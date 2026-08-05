@@ -1,0 +1,372 @@
+<div id="app"></div>
+<style>
+  :root{
+    --bg-deep:#0a0e13;
+    --bg-panel:#121820;
+    --bg-panel-2:#161d27;
+    --border:#212b36;
+    --text:#dde6ee;
+    --text-muted:#7d8b98;
+    --teal:#4fd1c5;
+    --violet:#a78bfa;
+    --amber:#f0a860;
+    --green:#7bc67e;
+    --rose:#e893b3;
+    --slate:#9aa7b5;
+    --danger:#e2635f;
+    --ok:#7bc67e;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  #app{
+    background:var(--bg-deep);
+    color:var(--text);
+    font-family:var(--sans);
+    padding:0;
+    min-height:100%;
+    max-width:760px;
+    margin:0 auto;
+  }
+  .header{
+    padding:28px 24px 18px;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    background:var(--bg-deep);
+    z-index:5;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:var(--mono);
+    font-size:18px;
+    margin:0 0 14px 0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .gauge-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .gauge-track{
+    flex:1;
+    height:6px;
+    background:var(--bg-panel-2);
+    border-radius:3px;
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+  .gauge-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--teal), var(--violet));
+    transition:width 0.35s ease;
+  }
+  .gauge-label{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+    white-space:nowrap;
+    min-width:80px;
+    text-align:right;
+  }
+  .q-card{
+    padding:22px 24px;
+    border-bottom:1px solid var(--border);
+  }
+  .q-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .q-num{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+  }
+  .q-text{
+    font-size:14.5px;
+    line-height:1.55;
+    margin:0 0 14px 0;
+    color:var(--text);
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .opt{
+    text-align:left;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:11px 14px;
+    border-radius:8px;
+    font-size:13.5px;
+    cursor:pointer;
+    font-family:var(--sans);
+    transition:border-color 0.15s ease, background 0.15s ease;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .opt:hover:not(:disabled){
+    border-color:#33404d;
+    background:var(--bg-panel-2);
+  }
+  .opt:disabled{cursor:default;}
+  .opt-letter{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+    min-width:14px;
+    padding-top:1px;
+  }
+  .opt.correct{
+    border-color:var(--ok);
+    background:rgba(123,198,126,0.08);
+  }
+  .opt.correct .opt-letter{color:var(--ok);}
+  .opt.incorrect{
+    border-color:var(--danger);
+    background:rgba(226,99,95,0.08);
+  }
+  .opt.incorrect .opt-letter{color:var(--danger);}
+  .opt.dim{opacity:0.45;}
+  .explain{
+    margin-top:12px;
+    padding:12px 14px;
+    border-radius:8px;
+    background:var(--bg-panel-2);
+    border-left:2px solid var(--teal);
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--text-muted);
+  }
+  .explain b{color:var(--text);}
+  .explain .tag{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--text-muted);
+    display:block;
+    margin-bottom:8px;
+  }
+  .summary{
+    padding:32px 24px 40px;
+    text-align:center;
+  }
+  .summary h2{
+    font-family:var(--mono);
+    font-size:22px;
+    margin-bottom:6px;
+  }
+  .summary .score-big{
+    font-family:var(--mono);
+    font-size:44px;
+    font-weight:700;
+    margin:14px 0 4px;
+    background:linear-gradient(90deg, var(--teal), var(--violet));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .summary .score-sub{
+    color:var(--text-muted);
+    font-size:13px;
+    margin-bottom:26px;
+  }
+  .breakdown{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    text-align:left;
+    margin-bottom:28px;
+  }
+  .bd-item{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:12px 14px;
+  }
+  .bd-name{
+    font-family:var(--mono);
+    font-size:12px;
+    margin-bottom:6px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .bd-bar-track{
+    height:5px;
+    background:var(--bg-panel-2);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .bd-bar-fill{height:100%;border-radius:3px;}
+  .restart-btn{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:10px 22px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .restart-btn:hover{border-color:var(--teal); color:var(--teal);}
+</style>
+
+<script>
+const QUESTIONS = [
+{cat:"Frameworks",q:"A security architect is reviewing a system where data moves from an untrusted external network into a trusted internal segment through a single choke point. Which STRIDE variant would focus attention specifically on that crossing point rather than on every component individually?",opts:["STRIDE-per-element","STRIDE-per-process","STRIDE-per-trust-boundary","STRIDE-per-interaction"],correct:2,explain:"The scenario is defined by a change in trust level at one crossing point — that's exactly what <b>STRIDE-per-trust-boundary</b> targets, rather than sweeping every component (per-element) or every data flow (per-interaction)."},
+{cat:"Frameworks",q:"A vulnerability is trivial to exploit and would affect nearly every user, but it's buried inside an obscure internal deployment script that almost no one would ever stumble across. Which DREAD factor would most likely pull the total score down despite the severity of the other factors?",opts:["Damage","Affected Users","Exploitability","Discoverability"],correct:3,explain:"Damage and Affected Users would score high, and it's described as trivial to exploit, so Exploitability is high too. <b>Discoverability</b> is the outlier here — buried and unlikely to be found — so it pulls the total down."},
+{cat:"Frameworks",q:"A PASTA team has already defined business objectives, defined technical scope, and decomposed the application into its components and data flows. They are now working through which specific attack vectors the technology stack could realistically enable. Which stage are they currently in?",opts:["Vulnerability and Weakness Analysis","Threat Analysis","Attack Modeling","Risk and Impact Analysis"],correct:1,explain:"Identifying potential threats and attack vectors — before mapping them to specific technical weaknesses — is the definition of PASTA's <b>Threat Analysis</b> stage (stage 4), which comes right after decomposition."},
+{cat:"Frameworks",q:"Continuing from the prior scenario, once the PASTA team finishes cataloguing attack vectors, what is the very next stage in the methodology, where those vectors get mapped onto specific technical flaws in the actual system?",opts:["Attack Modeling","Vulnerability and Weakness Analysis","Define Technical Scope","Risk and Impact Analysis"],correct:1,explain:"Stage 5, <b>Vulnerability and Weakness Analysis</b>, is where general attack vectors identified in Threat Analysis get matched to concrete design or implementation flaws — this is also where design flaw analysis specifically occurs."},
+{cat:"Frameworks",q:"After creating a data flow diagram and identifying threats with STRIDE, a team applies specific countermeasures like input validation and stronger authentication checks. Which step of Microsoft's four-step threat modeling process are they performing?",opts:["Identify","Diagram","Mitigate","Validate"],correct:2,explain:"Applying countermeasures against identified threats is exactly the <b>Mitigate</b> step — it comes after Diagram and Identify, and before Validate confirms the fixes actually worked."},
+{cat:"Frameworks",q:"An enterprise wants to benchmark its security program against empirical data on what dozens of real, similar companies are actually doing in practice — not against an idealized target model. Which framework fits, and why does it differ fundamentally from its closest alternative?",opts:["SAMM, because it is prescriptive","BSIMM, because it is descriptive","PASTA, because it includes a maturity stage","OCTAVE, because it benchmarks against industry averages"],correct:1,explain:"<b>BSIMM</b> is built entirely from observed data across real organizations — it describes what companies actually do. Its closest alternative, SAMM, instead prescribes a target roadmap, which is the opposite orientation."},
+{cat:"Frameworks",q:"A team using the TRIKE approach wants to model how the system was actually implemented, in order to spot discrepancies from what was originally required. Which of TRIKE's models covers this?",opts:["Threat Model","Requirements Model","Implementation Model","Risk Model"],correct:2,explain:"TRIKE is built from three models — Requirements, Implementation, and Risk. Modeling how the system was actually built (versus what was required) is the <b>Implementation Model</b>'s job; there is no separate 'Threat Model' in TRIKE."},
+{cat:"Frameworks",q:"Which BSIMM domain would most directly include publishing internal secure-coding standards and tracking emerging attacker techniques relevant to the industry?",opts:["Governance","Intelligence","SSDL Touchpoints","Deployment"],correct:1,explain:"<b>Intelligence</b> covers attack models, security features, and standards research — publishing standards and tracking attacker trends both fall squarely in that domain, distinct from Governance's compliance/training focus."},
+{cat:"Frameworks",q:"Which BSIMM domain covers a mandatory annual security-awareness training program and the process of mapping the company's practices to regulatory compliance obligations?",opts:["Intelligence","SSDL Touchpoints","Governance","Deployment"],correct:2,explain:"Training programs and compliance mapping are strategic, organization-wide activities — that's <b>Governance</b>, as opposed to the hands-on technical work covered by SSDL Touchpoints."},
+{cat:"Frameworks",q:"A team manages patch releases into production and continuously monitors deployed systems for newly disclosed vulnerabilities. Which BSIMM domain covers this activity?",opts:["Governance","Intelligence","Deployment","SSDL Touchpoints"],correct:2,explain:"Patch management and vulnerability management in a live environment are exactly what the <b>Deployment</b> domain covers, as distinct from the pre-release, hands-on activities of SSDL Touchpoints."},
+{cat:"Frameworks",q:"Which BSIMM domain would a scheduled manual code review, performed as a mandatory step before code merges into the main branch, fall under?",opts:["SSDL Touchpoints","Governance","Intelligence","Deployment"],correct:0,explain:"Hands-on activities integrated directly into the development pipeline — code review, security testing — belong to <b>SSDL Touchpoints</b>, not the strategic Governance domain."},
+{cat:"Frameworks",q:"An attacker crafts network packets that appear to originate from a trusted internal server in order to bypass firewall rules that only allow internal IP ranges. Which STRIDE category best captures the core threat, given that no data has actually been altered?",opts:["Tampering","Spoofing","Elevation of Privilege","Information Disclosure"],correct:1,explain:"The attacker is faking the packet's origin/identity to be trusted — that's <b>Spoofing</b>. No modification of data occurred, which rules out Tampering."},
+{cat:"Frameworks",q:"An attacker intercepts an unencrypted configuration file in transit and reads its contents to learn database credentials, without modifying anything. Which STRIDE category applies?",opts:["Tampering","Repudiation","Information Disclosure","Denial of Service"],correct:2,explain:"Simply reading confidential data without altering it is the definition of <b>Information Disclosure</b> — Tampering would require modification, which didn't happen here."},
+{cat:"Frameworks",q:"A disgruntled employee makes an unauthorized change to a financial record and then deletes the audit logs, so there is no way to later prove who made the change. Both tampering and another STRIDE category are present here — which one specifically describes the concern that there's no way to later prove who did it?",opts:["Elevation of Privilege","Repudiation","Information Disclosure","Spoofing"],correct:1,explain:"The inability to later prove who performed an action, due to missing or deleted evidence, is the specific definition of <b>Repudiation</b> — even though unauthorized modification (Tampering) also occurred in this scenario."},
+{cat:"Frameworks",q:"A support engineer with standard user-level access exploits a flaw in an internal tool to gain root access on a production database server. Which STRIDE category applies?",opts:["Spoofing","Tampering","Elevation of Privilege","Denial of Service"],correct:2,explain:"Gaining a higher level of access than was authorized is the definition of <b>Elevation of Privilege</b> — the engineer already had a legitimate identity, so this isn't Spoofing."},
+{cat:"Frameworks",q:"An attacker sends malformed packets that repeatedly crash a critical service, making the application unavailable to legitimate customers. Which STRIDE category applies?",opts:["Denial of Service","Tampering","Information Disclosure","Repudiation"],correct:0,explain:"Degrading or blocking availability for legitimate users is the definition of <b>Denial of Service</b>, regardless of the specific mechanism used to cause the crash."},
+{cat:"Frameworks",q:"A vulnerability requires highly specialized skills and custom tooling to trigger even once — but once triggered with that tooling, the exact same result can be reproduced every time. Which DREAD factor would score low despite Reproducibility scoring high?",opts:["Damage","Exploitability","Affected Users","Discoverability"],correct:1,explain:"Requiring specialized skill and custom tooling describes low <b>Exploitability</b> (hard to pull off), even though once achieved, the attack is highly Reproducible (consistent outcome)."},
+{cat:"Frameworks",q:"Which of these two frameworks explicitly includes a dedicated stage for simulating specific attacker behavior against a system, going beyond simply cataloguing threat types?",opts:["Microsoft's four-step model, via its Identify step","PASTA, via its Attack Modeling stage","STRIDE, via its per-interaction variant","BSIMM, via its Intelligence domain"],correct:1,explain:"PASTA's <b>Attack Modeling</b> stage is specifically about developing concrete attack scenarios against the system — Microsoft's four-step model has no equivalent dedicated simulation stage."},
+{cat:"Frameworks",q:"Which framework originates from an asset-centric, organizational risk assessment tradition — starting from what assets matter to the business — rather than from simulating specific attacker behavior?",opts:["PASTA","OCTAVE","TRIKE","Microsoft Threat Modeling"],correct:1,explain:"<b>OCTAVE</b> begins by building asset-based threat profiles tied to organizational risk, in contrast to PASTA's attacker-simulation orientation."},
+{cat:"SDL",q:"A team performs static analysis for the first time on the current release, formally documents its test plan, and also revisits and refines a threat model that was first created earlier in the project. Which SDL phase best fits this combination of activities?",opts:["Architecture (A2)","Design and Development (A3)","Security Assessment / Discovery (A1)","Ship (A5)"],correct:1,explain:"The initial threat model and DFD are created in Architecture (A2); <b>Design and Development (A3)</b> is where that threat model gets updated and where test plan documentation and static analysis are formally introduced."},
+{cat:"SDL",q:"A newly acquired product line needs an internal security review before it is combined with the company's existing cloud services. Which post-release activity covers this specific situation?",opts:["Third-Party Reviews (PRSA2)","Post-Release Certifications (PRSA3)","Internal Review for New Product Combinations or Cloud Deployments (PRSA4)","External Vulnerability Disclosure Response (PRSA1)"],correct:2,explain:"Reviewing internally how a newly combined or newly acquired product interacts with existing cloud deployments is specifically <b>PRSA4</b>, distinct from ongoing third-party vendor reviews (PRSA2)."},
+{cat:"SDL",q:"A team is only required to run RPC-specific fuzz testing during the one sprint where an RPC endpoint is newly introduced — no other sprint requires it. What type of agile security requirement is this?",opts:["Every-sprint requirement","One-time requirement","Bucket requirement","Final Security Review requirement"],correct:2,explain:"A requirement triggered only when a specific technology (here, RPC) is introduced — not applied continuously and not a single project-wide event — is a <b>Bucket requirement</b>."},
+{cat:"SDL",q:"A team resolves all critical and high-severity vulnerabilities before shipping, but two low-severity issues remain that leadership formally reviews and accepts as tolerable risk. What Final Security Review outcome does this describe?",opts:["Passed","Passed with exceptions","Not passed (no escalation)","Not passed (escalation)"],correct:1,explain:"'Passed' requires every issue resolved. Formally accepting minor remaining risk, rather than leaving it unresolved and unreviewed, is the definition of <b>Passed with exceptions</b>."},
+{cat:"Testing",q:"A tool is integrated into a CI/CD pipeline to scan every commit for insecure coding patterns without ever executing the code, flagging issues before human code review even begins. Which analysis type and tool from the standard toolset best fits?",opts:["Dynamic Analysis using OWASP ZAP","Static Analysis using SonarQube","Gray-box testing using Burp Suite","Dynamic Analysis using SonarQube"],correct:1,explain:"Scanning code without executing it is <b>Static Analysis</b>, and <b>SonarQube</b> is the tool associated with SAST in this material — OWASP ZAP and Burp Suite are both used against running applications."},
+{cat:"Testing",q:"A tester is given valid login credentials and API documentation, but no access to the underlying source code or architecture diagrams. What type of testing is this?",opts:["White-box","Black-box","Gray-box","Regression"],correct:2,explain:"Partial internal knowledge — credentials and API docs, but no source code — is the definition of <b>Gray-box</b> testing, distinct from full access (white-box) or zero knowledge (black-box)."},
+{cat:"Testing",q:"An assessment team is given only the public URL of a live application, no credentials and no source code, and interacts with it exclusively through its running interface to search for exploitable flaws. Which combination of testing perspective and tool best fits?",opts:["White-box, SonarQube","Black-box dynamic testing, OWASP ZAP","Gray-box static testing, Burp Suite","Black-box, SonarQube"],correct:1,explain:"Zero internal knowledge is <b>Black-box</b>; testing a live, running system is <b>Dynamic</b> analysis; and OWASP ZAP is the DAST tool in this material — SonarQube is static-only and wouldn't apply here."},
+{cat:"Principles",q:"Two engineers on the same team have different access levels purely because of the roles assigned to them in the system, not because of any individual, case-by-case judgment about what each one specifically needs. Which principle is this?",opts:["Principle of Least Privilege","Role-Based Access Control","Separation of Duties","Zero Trust"],correct:1,explain:"Assigning access according to a defined role, rather than an individualized, case-by-case assessment, is <b>Role-Based Access Control</b> — Least Privilege is the broader idea that access should be minimized, but RBAC is the specific mechanism described here."},
+{cat:"Principles",q:"A financial application requires that the person who creates a payment can never be the same person who approves it. Which principle is this?",opts:["Defense in Depth","Least Privilege","Separation of Duties","Role-Based Access Control"],correct:2,explain:"Requiring two different people to complete a sensitive process, specifically to reduce fraud risk, is the definition of <b>Separation of Duties</b>."},
+{cat:"Vulnerabilities",q:"A form field is already restricted to accept only numeric characters, yet an attacker still manipulates a backend SQL statement by combining that numeric field with another string field elsewhere in the same query. Which control, if implemented, would have prevented this regardless of the input validation gap?",opts:["Output Encoding","Stronger Input Validation on the same field","Parameterized Queries","Session Timeout"],correct:2,explain:"<b>Parameterized Queries</b> separate code from data entirely at the database layer, so the attack succeeds or fails independent of any single field's validation rules — validation alone can be bypassed elsewhere in the query."},
+{cat:"Vulnerabilities",q:"User-submitted comments are stored in a database unmodified and later displayed on a webpage without any transformation, allowing an embedded script to execute in another visitor's browser. Which control most directly addresses this specific point of failure?",opts:["Input Validation at submission time","Output Encoding at render time","Parameterized Queries","Multi-Factor Authentication"],correct:1,explain:"Because the dangerous content is only dangerous once it's rendered in a browser, the fix has to happen at that rendering step — <b>Output Encoding</b> — rather than relying solely on validation when the comment was first submitted."},
+{cat:"SDL",q:"A team is compiling a list of all applicable laws and regulations for the markets it will sell into, along with a full inventory of third-party software components used in the product. Which SDL phase are they in?",opts:["Architecture (A2)","Security Assessment / Discovery (A1)","Design and Development (A3)","Ship (A5)"],correct:1,explain:"Compiling applicable regulations and a third-party software inventory are both explicitly discovery-stage deliverables — <b>Security Assessment / Discovery (A1)</b>, which precedes any architecture or threat modeling work."},
+{cat:"SDL",q:"An external audit firm is brought in annually to review the security posture of software components licensed from outside vendors and used within the shipped product. Which post-release activity is this?",opts:["Third-Party Reviews (PRSA2)","Post-Release Certifications (PRSA3)","External Vulnerability Disclosure Response (PRSA1)","Security Architectural Reviews (PRSA5)"],correct:0,explain:"Reviewing licensed vendor components on an ongoing basis is specifically <b>Third-Party Reviews (PRSA2)</b>, as distinct from responding to externally reported vulnerabilities (PRSA1)."},
+{cat:"SDL",q:"At the very start of a brand-new project, a team selects the overall system architecture pattern and documents baseline security assumptions that will not be revisited every sprint. What type of agile security requirement is this?",opts:["Bucket requirement","Every-sprint requirement","One-time requirement","Final Security Review requirement"],correct:2,explain:"Even though architecture decisions feel foundational and long-lasting, the defining trait here is that it happens exactly once per project — the definition of a <b>One-time requirement</b>."},
+{cat:"SDL",q:"Two medium-severity issues remain unresolved at ship date, but leadership determines they don't require executive involvement and can simply be tracked for a future patch. What Final Security Review outcome is this?",opts:["Passed with exceptions","Not passed (no escalation)","Not passed (escalation)","Passed"],correct:1,explain:"Because the issues are left unresolved (not formally accepted as tolerable, just deferred) but don't rise to the level needing leadership escalation, this is <b>Not passed (no escalation)</b> — distinct from Passed with exceptions, which reflects a formal risk acceptance of resolved-adjacent issues."},
+{cat:"Testing",q:"An assessor intercepts and manually manipulates HTTP requests between a browser and a web application to probe for business logic flaws that automated scanners would likely miss. Which tool from the standard toolset fits this workflow best?",opts:["SonarQube","OWASP ZAP","Burp Suite","Wireshark"],correct:2,explain:"Manual interception and manipulation of HTTP requests for logic-flaw testing is the signature workflow of <b>Burp Suite</b>, distinct from ZAP's more automated DAST scanning and SonarQube's static analysis."},
+{cat:"Principles",q:"A payroll system defines 'Payroll Processor' and 'Payroll Approver' as two distinct roles, and no single account is ever permitted to hold both roles at once. Which two principles are jointly reflected in this design?",opts:["Least Privilege alone","Role-Based Access Control combined with Separation of Duties","Defense in Depth alone","Zero Trust combined with Least Privilege"],correct:1,explain:"Assigning permissions via defined roles is <b>RBAC</b>; preventing any single account from holding both roles at once specifically prevents one person from completing a sensitive process alone, which is <b>Separation of Duties</b>."},
+{cat:"Principles",q:"Even though a user has already authenticated once at the network perimeter, every subsequent request to internal microservices is independently re-verified and re-authorized, regardless of the user's location on the network. Which principle does this best illustrate, beyond simple layered defenses?",opts:["Defense in Depth","Zero Trust","Least Privilege","Fail Safe"],correct:1,explain:"The specific detail that network location doesn't grant implicit trust — every request is independently re-verified — is the hallmark of <b>Zero Trust</b>, not just having multiple layers (Defense in Depth)."},
+{cat:"Principles",q:"When the authentication service becomes unavailable during an outage, the application defaults to denying all access rather than letting requests through unchecked. Which principle does this reflect?",opts:["Fail Safe","Least Privilege","Zero Trust","Defense in Depth"],correct:0,explain:"Defaulting to a secure (denied) state when a control fails, rather than defaulting open, is the definition of <b>Fail Safe</b>."},
+{cat:"Vulnerabilities",q:"An attacker uploads a file with a '.jpg' extension that actually contains executable code, and a misconfigured server later executes it as a script. Which control is most directly responsible for preventing this specific failure?",opts:["Output Encoding","Input Validation on file type and content","Parameterized Queries","Session Management"],correct:1,explain:"Verifying that an uploaded file's actual type and content match what's expected — not just trusting the extension — is <b>Input Validation</b>; Output Encoding addresses a completely different stage of a completely different vulnerability class (XSS)."},
+{cat:"Vulnerabilities",q:"An audit discovers that user passwords are hashed using a fast, general-purpose, unsalted hash function, making them easy to crack with precomputed lookup tables. What is the correct remediation?",opts:["Add rate limiting to the login page","Switch to a strong, salted hashing algorithm such as bcrypt or Argon2","Encrypt the password field with AES instead of hashing","Require multi-factor authentication only"],correct:1,explain:"The root cause is the choice of hashing algorithm — fast and unsalted — so the fix is a <b>strong, salted hash function</b> designed to resist cracking, not encryption (which is reversible and not appropriate for password storage) or unrelated controls like MFA."},
+{cat:"Vulnerabilities",q:"A user closes their laptop but leaves a banking application logged in in a background browser tab for hours, with no mechanism ever expiring the inactive session. What is the missing control?",opts:["Output Encoding","Parameterized Queries","Proper session timeout / session management","Role-Based Access Control"],correct:2,explain:"Expiring sessions after a period of inactivity is a core part of <b>session management</b> — none of the other listed controls address session lifecycle at all."},
+{cat:"Vulnerabilities",q:"A code review finds that encryption keys used to protect sensitive customer data are hardcoded directly into the application's source code repository. What is the underlying failure category?",opts:["Weak hashing","Key management","Input validation","Output encoding"],correct:1,explain:"Hardcoding keys in source (instead of secure storage with proper rotation) is a <b>key management</b> failure — a distinct concern from hashing algorithm choice, which applies to passwords, not key storage."},
+{cat:"Frameworks",q:"A newly formed startup with no existing security program wants a step-by-step roadmap of practices to adopt as it matures, rather than a benchmark against what other companies already do. Which framework fits, and why?",opts:["BSIMM, because it is descriptive","SAMM, because it is prescriptive","OCTAVE, because it is asset-centric","TRIKE, because it is risk-based"],correct:1,explain:"A forward-looking roadmap of practices to adopt is the definition of a <b>prescriptive</b> model — that's <b>SAMM</b>. BSIMM instead describes what real organizations are already doing, which isn't what a startup with no program yet needs."},
+{cat:"Frameworks",q:"A well-established enterprise wants to know how its current security practices compare to actual practices used across dozens of real organizations in its industry, based on empirical observation rather than an idealized target. Which framework fits?",opts:["SAMM","BSIMM","PASTA","Microsoft Threat Modeling"],correct:1,explain:"Comparing against empirically observed practice at real organizations is exactly what <b>BSIMM</b> was built to do, as opposed to SAMM's prescriptive target model."},
+{cat:"Frameworks",q:"In a microservices architecture, a public-facing API gateway passes an internal service token to a downstream service without validating it, meaning a compromised gateway could let an external actor impersonate an internal service across that boundary. Which STRIDE category best captures the core risk being introduced?",opts:["Tampering","Spoofing","Information Disclosure","Denial of Service"],correct:1,explain:"Impersonating a trusted internal service to another component is fundamentally an identity-impersonation problem — <b>Spoofing</b> — even though it occurs at a trust boundary between services."},
+{cat:"Frameworks",q:"A PASTA team has just finished cataloguing which threat actors (insider, organized crime, nation-state, etc.) are relevant to their application and the general attack patterns those actors typically use, but has not yet mapped any of this to specific technical weaknesses in their own system. Which stage did they just complete, and which comes next?",opts:["Just completed Attack Modeling; next is Risk and Impact Analysis","Just completed Threat Analysis; next is Vulnerability and Weakness Analysis","Just completed Application Decomposition; next is Threat Analysis","Just completed Define Objectives; next is Define Technical Scope"],correct:1,explain:"Cataloguing relevant threat actors and their general patterns — without yet mapping to specific technical flaws — is <b>Threat Analysis</b> (stage 4); the next stage, <b>Vulnerability and Weakness Analysis</b> (stage 5), is where that mapping to concrete weaknesses happens."},
+{cat:"Frameworks",q:"Which pairing correctly distinguishes the primary orientation of BSIMM versus SAMM?",opts:["BSIMM prescribes a target model; SAMM describes real-world data","BSIMM describes real-world data; SAMM prescribes a target model","Both are purely descriptive, differing only in domain count","Both are purely prescriptive, differing only in scope"],correct:1,explain:"This is the core distinction repeated throughout the material: <b>BSIMM is descriptive</b> (built from studying real organizations), while <b>SAMM is prescriptive</b> (lays out a target roadmap to follow)."},
+{cat:"Frameworks",q:"A team wants to model precisely how a system's actual implementation could introduce risk that wasn't anticipated when requirements were written, using TRIKE. Beyond the Implementation Model itself, which other TRIKE model would then be used to quantify how much that discrepancy actually matters?",opts:["Requirements Model","Risk Model","Threat Model","Attack Model"],correct:1,explain:"Once a discrepancy or weakness is identified, TRIKE's <b>Risk Model</b> is what calculates the actual risk level associated with it — TRIKE has no separate 'Threat Model' or 'Attack Model.'"},
+{cat:"Testing",q:"A security team wants to combine full access to source code with the ability to actually run the application and observe its live behavior under test conditions. Which combination of terms describes this approach?",opts:["Black-box, static testing","White-box, dynamic testing","Gray-box, static testing","White-box, static testing only"],correct:1,explain:"Full access to source code is <b>white-box</b>; observing behavior while the program actually runs is <b>dynamic</b> analysis — combining both gives the most comprehensive view, unlike black-box or static-only approaches."},
+{cat:"SDL",q:"A final security review is underway. The team has completed dynamic analysis and fuzz testing, and manual code review is wrapping up, but the formal penetration test and vulnerability scan are still scheduled. Which SDL phase are they most likely finishing, and which comes next?",opts:["Finishing Architecture (A2); next is Design and Development (A3)","Finishing Design and Development readiness (A4); next is Ship (A5)","Finishing Ship (A5); next is Design and Development readiness (A4)","Finishing Design and Development (A3); next is Design and Development readiness (A4)"],correct:1,explain:"Fuzz testing, dynamic analysis, and manual code review are the defining activities of <b>Design and Development readiness (A4)</b>; penetration testing and vulnerability scans are Ship-phase (A5) activities that follow."}
+];
+
+let answered = new Array(QUESTIONS.length).fill(null);
+
+function render(){
+  const app = document.getElementById('app');
+  const answeredCount = answered.filter(a=>a!==null).length;
+  const correctCount = answered.filter((a,i)=>a===QUESTIONS[i].correct).length;
+  const pct = Math.round((answeredCount/QUESTIONS.length)*100);
+
+  let html = `
+    <div class="header">
+      <div class="eyebrow">Secure Software Design — Advanced Review</div>
+      <h1>50 Scenario-Based Questions, with Explanations</h1>
+      <div class="gauge-row">
+        <div class="gauge-track"><div class="gauge-fill" style="width:${pct}%"></div></div>
+        <div class="gauge-label">${answeredCount}/${QUESTIONS.length} answered</div>
+      </div>
+    </div>
+  `;
+
+  QUESTIONS.forEach((item, i)=>{
+    const userAns = answered[i];
+    const isAnswered = userAns !== null;
+    html += `<div class="q-card">
+      <div class="q-top">
+        <span class="q-num">Q${i+1}</span>
+      </div>
+      <p class="q-text">${item.q}</p>
+      <div class="options">`;
+    item.opts.forEach((opt,j)=>{
+      let cls = "opt";
+      if(isAnswered){
+        if(j===item.correct) cls += " correct";
+        else if(j===userAns) cls += " incorrect";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${isAnswered?"disabled":""} onclick="selectAnswer(${i},${j})">
+        <span class="opt-letter">${String.fromCharCode(65+j)}</span><span>${opt}</span>
+      </button>`;
+    });
+    html += `</div>`;
+    if(isAnswered){
+      html += `<div class="explain"><span class="tag">${item.cat}</span>${item.explain}</div>`;
+    }
+    html += `</div>`;
+  });
+
+  if(answeredCount === QUESTIONS.length){
+    const scorePct = Math.round((correctCount/QUESTIONS.length)*100);
+    const cats = [...new Set(QUESTIONS.map(q=>q.cat))];
+    const colorMap = {Frameworks:"teal", SDL:"violet", Testing:"amber", Principles:"green", Vulnerabilities:"rose"};
+    html += `<div class="summary">
+      <div class="eyebrow">Review Complete</div>
+      <h2>Final Score</h2>
+      <div class="score-big">${correctCount}/${QUESTIONS.length}</div>
+      <div class="score-sub">${scorePct}% correct</div>
+      <div class="breakdown">`;
+    cats.forEach(cat=>{
+      const idxs = QUESTIONS.map((q,i)=>q.cat===cat?i:-1).filter(i=>i>=0);
+      const c = idxs.filter(i=>answered[i]===QUESTIONS[i].correct).length;
+      const total = idxs.length;
+      const p = total? Math.round((c/total)*100):0;
+      const colorVar = "var(--"+(colorMap[cat]||"teal")+")";
+      html += `<div class="bd-item">
+        <div class="bd-name"><span>${cat}</span><span style="color:${colorVar}">${c}/${total}</span></div>
+        <div class="bd-bar-track"><div class="bd-bar-fill" style="width:${p}%;background:${colorVar}"></div></div>
+      </div>`;
+    });
+    html += `</div>
+      <button class="restart-btn" onclick="restart()">Retake review</button>
+    </div>`;
+  }
+
+  app.innerHTML = html;
+}
+
+function selectAnswer(qIndex, optIndex){
+  if(answered[qIndex] !== null) return;
+  answered[qIndex] = optIndex;
+  render();
+}
+
+function restart(){
+  answered = new Array(QUESTIONS.length).fill(null);
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+render();
+</script>
