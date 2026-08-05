@@ -1,0 +1,372 @@
+<div id="app"></div>
+<style>
+  :root{
+    --bg-deep:#0a0e13;
+    --bg-panel:#121820;
+    --bg-panel-2:#161d27;
+    --border:#212b36;
+    --text:#dde6ee;
+    --text-muted:#7d8b98;
+    --teal:#4fd1c5;
+    --violet:#a78bfa;
+    --amber:#f0a860;
+    --green:#7bc67e;
+    --rose:#e893b3;
+    --slate:#9aa7b5;
+    --danger:#e2635f;
+    --ok:#7bc67e;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  #app{
+    background:var(--bg-deep);
+    color:var(--text);
+    font-family:var(--sans);
+    padding:0;
+    min-height:100%;
+    max-width:760px;
+    margin:0 auto;
+  }
+  .header{
+    padding:28px 24px 18px;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    background:var(--bg-deep);
+    z-index:5;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:var(--mono);
+    font-size:19px;
+    margin:0 0 14px 0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .gauge-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .gauge-track{
+    flex:1;
+    height:6px;
+    background:var(--bg-panel-2);
+    border-radius:3px;
+    overflow:hidden;
+    border:1px solid var(--border);
+  }
+  .gauge-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--teal), var(--violet));
+    transition:width 0.35s ease;
+  }
+  .gauge-label{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+    white-space:nowrap;
+    min-width:80px;
+    text-align:right;
+  }
+  .q-card{
+    padding:22px 24px;
+    border-bottom:1px solid var(--border);
+  }
+  .q-top{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  .q-num{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+  }
+  .q-text{
+    font-size:15px;
+    line-height:1.5;
+    margin:0 0 14px 0;
+    color:var(--text);
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .opt{
+    text-align:left;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:11px 14px;
+    border-radius:8px;
+    font-size:13.5px;
+    cursor:pointer;
+    font-family:var(--sans);
+    transition:border-color 0.15s ease, background 0.15s ease;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .opt:hover:not(:disabled){
+    border-color:#33404d;
+    background:var(--bg-panel-2);
+  }
+  .opt:disabled{cursor:default;}
+  .opt-letter{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+    min-width:14px;
+    padding-top:1px;
+  }
+  .opt.correct{
+    border-color:var(--ok);
+    background:rgba(123,198,126,0.08);
+  }
+  .opt.correct .opt-letter{color:var(--ok);}
+  .opt.incorrect{
+    border-color:var(--danger);
+    background:rgba(226,99,95,0.08);
+  }
+  .opt.incorrect .opt-letter{color:var(--danger);}
+  .opt.dim{opacity:0.45;}
+  .explain{
+    margin-top:12px;
+    padding:11px 13px;
+    border-radius:8px;
+    background:var(--bg-panel-2);
+    border-left:2px solid var(--teal);
+    font-size:12.5px;
+    line-height:1.55;
+    color:var(--text-muted);
+  }
+  .explain b{color:var(--text);}
+  .explain .tag{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--text-muted);
+    display:block;
+    margin-bottom:6px;
+  }
+  .summary{
+    padding:32px 24px 40px;
+    text-align:center;
+  }
+  .summary h2{
+    font-family:var(--mono);
+    font-size:22px;
+    margin-bottom:6px;
+  }
+  .summary .score-big{
+    font-family:var(--mono);
+    font-size:44px;
+    font-weight:700;
+    margin:14px 0 4px;
+    background:linear-gradient(90deg, var(--teal), var(--violet));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .summary .score-sub{
+    color:var(--text-muted);
+    font-size:13px;
+    margin-bottom:26px;
+  }
+  .breakdown{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    text-align:left;
+    margin-bottom:28px;
+  }
+  .bd-item{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:12px 14px;
+  }
+  .bd-name{
+    font-family:var(--mono);
+    font-size:12px;
+    margin-bottom:6px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .bd-bar-track{
+    height:5px;
+    background:var(--bg-panel-2);
+    border-radius:3px;
+    overflow:hidden;
+  }
+  .bd-bar-fill{height:100%;border-radius:3px;}
+  .restart-btn{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:10px 22px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .restart-btn:hover{border-color:var(--teal); color:var(--teal);}
+</style>
+
+<script>
+const QUESTIONS = [
+{cat:"Vulnerabilities",q:"Enforcing that user input matches an expected type, size, and range before it's processed describes:",opts:["Output Encoding","Input Validation","Parameterized Queries","Session Management"],correct:1},
+{cat:"Frameworks",q:"Which BSIMM domain covers strategy, compliance, and training programs?",opts:["Governance","Intelligence","SSDL Touchpoints","Deployment"],correct:0},
+{cat:"Frameworks",q:"Which BSIMM domain focuses on attack models and standards research?",opts:["Deployment","Intelligence","Governance","SSDL Touchpoints"],correct:1},
+{cat:"Frameworks",q:"Which BSIMM domain includes hands-on activities such as code review and testing?",opts:["Intelligence","Deployment","SSDL Touchpoints","Governance"],correct:2},
+{cat:"Frameworks",q:"Which BSIMM domain covers configuration management and vulnerability management?",opts:["Governance","SSDL Touchpoints","Intelligence","Deployment"],correct:3},
+{cat:"Frameworks",q:"A STRIDE analysis conducted separately against every individual component of a system is known as:",opts:["STRIDE-per-interaction","STRIDE-per-element","STRIDE-per-process","STRIDE-per-trust-boundary"],correct:1},
+{cat:"Frameworks",q:"A STRIDE variant that focuses specifically on places where data crosses a security boundary is called:",opts:["STRIDE-per-trust-boundary","STRIDE-per-element","STRIDE-per-process","STRIDE-per-interaction"],correct:0},
+{cat:"Frameworks",q:"A STRIDE variant that examines the data flows between components is called:",opts:["STRIDE-per-process","STRIDE-per-trust-boundary","STRIDE-per-interaction","STRIDE-per-element"],correct:2},
+{cat:"Frameworks",q:"In DREAD's ternary scale, what numeric value is assigned to a 'High' rating?",opts:["1","2","3","5"],correct:2},
+{cat:"Frameworks",q:"A DREAD total score of 13-15 is classified as which risk level?",opts:["Low","Medium","High","Critical"],correct:2},
+{cat:"Frameworks",q:"A DREAD total score of 8-12 falls into which risk category?",opts:["Low","Medium","High","Informational"],correct:1},
+{cat:"Frameworks",q:"A DREAD total score of 5-7 is generally treated as:",opts:["High risk","Critical risk","Medium risk","Low risk"],correct:3},
+{cat:"Frameworks",q:"In the seven-stage PASTA methodology, design flaw analysis is primarily addressed during which stage?",opts:["Attack Modeling","Vulnerability and Weakness Analysis","Application Decomposition","Risk and Impact Analysis"],correct:1},
+{cat:"Frameworks",q:"Which PASTA stage comes first in the methodology?",opts:["Define Technical Scope","Threat Analysis","Define Objectives","Application Decomposition"],correct:2},
+{cat:"Frameworks",q:"Breaking down an application's architecture and data flows corresponds to which PASTA stage?",opts:["Application Decomposition","Attack Modeling","Threat Analysis","Define Technical Scope"],correct:0},
+{cat:"Frameworks",q:"Developing specific attack scenarios against a system occurs during which PASTA stage?",opts:["Vulnerability and Weakness Analysis","Attack Modeling","Threat Analysis","Risk and Impact Analysis"],correct:1},
+{cat:"Frameworks",q:"Evaluating business impact and likelihood is the focus of which final PASTA stage?",opts:["Risk and Impact Analysis","Attack Modeling","Define Objectives","Vulnerability and Weakness Analysis"],correct:0},
+{cat:"Frameworks",q:"In Microsoft's four-step threat modeling process, which step involves producing data flow diagrams?",opts:["Identify","Diagram","Mitigate","Validate"],correct:1},
+{cat:"Frameworks",q:"In Microsoft's threat modeling process, applying countermeasures happens during which step?",opts:["Validate","Diagram","Identify","Mitigate"],correct:3},
+{cat:"Frameworks",q:"Which step in Microsoft's threat modeling process confirms that identified threats have actually been addressed?",opts:["Mitigate","Diagram","Validate","Identify"],correct:2},
+{cat:"Frameworks",q:"In the OCTAVE methodology, building asset-based threat profiles occurs in which phase?",opts:["Phase 2","Phase 3","Phase 1","There is no dedicated phase for this"],correct:2},
+{cat:"Frameworks",q:"Identifying infrastructure vulnerabilities is the focus of which OCTAVE phase?",opts:["Phase 1","Phase 2","Phase 3","Phase 4"],correct:1},
+{cat:"Frameworks",q:"In the TRIKE approach, which model is specifically responsible for defining security requirements?",opts:["Implementation Model","Risk Model","Requirements Model","Threat Model"],correct:2},
+{cat:"Frameworks",q:"Which TRIKE model is used to calculate risk levels associated with identified threats?",opts:["Requirements Model","Risk Model","Implementation Model","Attack Model"],correct:1},
+{cat:"SDL",q:"During which SDL phase is a Privacy Impact Assessment plan typically produced?",opts:["Architecture (A2)","Ship (A5)","Security Assessment / Discovery (A1)","Design and Development (A3)"],correct:2},
+{cat:"SDL",q:"Which SDL phase is where a data flow diagram and initial STRIDE/DREAD threat modeling activity takes place?",opts:["Architecture (A2)","Ship (A5)","Security Assessment / Discovery (A1)","Design and Development readiness (A4)"],correct:0},
+{cat:"SDL",q:"Static analysis, updating the threat model, and design security review most closely align with which SDL phase?",opts:["Design and Development (A3)","Architecture (A2)","Ship (A5)","Security Assessment / Discovery (A1)"],correct:0},
+{cat:"SDL",q:"Fuzz testing, dynamic analysis, and manual code review are characteristic of which SDL phase?",opts:["Design and Development (A3)","Design and Development readiness (A4)","Architecture (A2)","Ship (A5)"],correct:1},
+{cat:"SDL",q:"Penetration testing and a final security review occur at which SDL phase?",opts:["Ship (A5)","Design and Development readiness (A4)","Architecture (A2)","Security Assessment / Discovery (A1)"],correct:0},
+{cat:"SDL",q:"Which post-release activity specifically addresses handling of externally reported vulnerabilities?",opts:["Third-Party Reviews (PRSA2)","External Vulnerability Disclosure Response (PRSA1)","Post-Release Certifications (PRSA3)","Security Architectural Reviews (PRSA5)"],correct:1},
+{cat:"SDL",q:"Which post-release activity is concerned with evaluating security in legacy code, M&A, and end-of-life products?",opts:["Post-Release Certifications (PRSA3)","Third-Party Reviews (PRSA2)","External Vulnerability Disclosure Response (PRSA1)","Security Architectural Reviews (PRSA5)"],correct:3},
+{cat:"SDL",q:"An agile security requirement that must be applied continuously in every sprint, such as input validation, is called a(n):",opts:["Bucket requirement","One-time requirement","Every-sprint requirement","Final Security Review requirement"],correct:2},
+{cat:"SDL",q:"A requirement that only applies when a specific technology is used, such as fuzz testing tied to RPC, is called a(n):",opts:["Every-sprint requirement","Bucket requirement","One-time requirement","Final Security Review requirement"],correct:1},
+{cat:"SDL",q:"A requirement implemented a single time per project, such as establishing the initial architecture, is a(n):",opts:["Bucket requirement","Final Security Review requirement","One-time requirement","Every-sprint requirement"],correct:2},
+{cat:"SDL",q:"A Final Security Review outcome where all issues are resolved and all requirements are met is labeled:",opts:["Passed with exceptions","Passed","Not passed (no escalation)","Not passed (escalation)"],correct:1},
+{cat:"SDL",q:"A Final Security Review outcome where minor, acceptable risks remain is labeled:",opts:["Passed","Passed with exceptions","Not passed (escalation)","Not passed (no escalation)"],correct:1},
+{cat:"SDL",q:"A Final Security Review outcome where critical unresolved issues require leadership involvement is labeled:",opts:["Not passed (no escalation)","Passed with exceptions","Not passed (escalation)","Passed"],correct:2},
+{cat:"Testing",q:"Examining source code for flaws without actually running the program describes which analysis method?",opts:["Dynamic Analysis","Static Analysis","Gray-box Testing","Regression Testing"],correct:1},
+{cat:"Testing",q:"Assessing a program's behavior while it is actively executing describes which analysis method?",opts:["Static Analysis","Dynamic Analysis","White-box Testing","Unit Testing"],correct:1},
+{cat:"Testing",q:"A tester with complete access to source code and internal documentation is performing which type of testing?",opts:["Black-box","Gray-box","White-box","Regression"],correct:2},
+{cat:"Testing",q:"A tester operating with no internal knowledge of the system, evaluating it purely from the outside, is performing which type of testing?",opts:["White-box","Black-box","Gray-box","Integration"],correct:1},
+{cat:"Testing",q:"A tester with only partial internal knowledge of a system is performing which type of testing?",opts:["Gray-box","White-box","Black-box","Functional"],correct:0},
+{cat:"Testing",q:"Which tool listed in the course materials is primarily used for static code analysis (SAST)?",opts:["OWASP ZAP","Burp Suite","SonarQube","Wireshark"],correct:2},
+{cat:"Testing",q:"Which tool listed in the course materials is primarily used for dynamic application security testing (DAST)?",opts:["SonarQube","OWASP ZAP","Nessus","Metasploit"],correct:1},
+{cat:"Principles",q:"Granting users only the minimum access necessary to do their job reflects which principle?",opts:["Separation of Duties","Defense in Depth","Principle of Least Privilege","Zero Trust"],correct:2},
+{cat:"Principles",q:"Requiring more than one person to complete a sensitive task, in order to reduce fraud risk, reflects which principle?",opts:["Least Privilege","Separation of Duties","Defense in Depth","Role-Based Access Control"],correct:1},
+{cat:"Principles",q:"Assigning system access according to a user's job function rather than to the individual describes:",opts:["Role-Based Access Control","Separation of Duties","Least Privilege","Zero Trust"],correct:0},
+{cat:"Principles",q:"Layering multiple independent security controls so that no single failure compromises the whole system describes:",opts:["Least Privilege","Defense in Depth","Role-Based Access Control","Fail Safe"],correct:1},
+{cat:"Principles",q:"Separating SQL code from user-supplied data to prevent injection attacks is best achieved through:",opts:["Output Encoding","Parameterized Queries","Input Validation alone","Session Timeouts"],correct:1},
+{cat:"Principles",q:"Encoding characters such as <, >, and & before rendering them in a browser is a countermeasure primarily aimed at preventing:",opts:["SQL Injection","Cross-Site Scripting","Privilege Escalation","Denial of Service"],correct:1}
+];
+
+let answered = new Array(QUESTIONS.length).fill(null);
+
+function render(){
+  const app = document.getElementById('app');
+  const answeredCount = answered.filter(a=>a!==null).length;
+  const correctCount = answered.filter((a,i)=>a===QUESTIONS[i].correct).length;
+  const pct = Math.round((answeredCount/QUESTIONS.length)*100);
+
+  let html = `
+    <div class="header">
+      <div class="eyebrow">Secure Software Design — Topic Review</div>
+      <h1>50 Questions: Frameworks, SDL, Testing &amp; Principles</h1>
+      <div class="gauge-row">
+        <div class="gauge-track"><div class="gauge-fill" style="width:${pct}%"></div></div>
+        <div class="gauge-label">${answeredCount}/${QUESTIONS.length} answered</div>
+      </div>
+    </div>
+  `;
+
+  QUESTIONS.forEach((item, i)=>{
+    const userAns = answered[i];
+    const isAnswered = userAns !== null;
+    html += `<div class="q-card">
+      <div class="q-top">
+        <span class="q-num">Q${i+1}</span>
+      </div>
+      <p class="q-text">${item.q}</p>
+      <div class="options">`;
+    item.opts.forEach((opt,j)=>{
+      let cls = "opt";
+      if(isAnswered){
+        if(j===item.correct) cls += " correct";
+        else if(j===userAns) cls += " incorrect";
+        else cls += " dim";
+      }
+      html += `<button class="${cls}" ${isAnswered?"disabled":""} onclick="selectAnswer(${i},${j})">
+        <span class="opt-letter">${String.fromCharCode(65+j)}</span><span>${opt}</span>
+      </button>`;
+    });
+    html += `</div>`;
+    if(isAnswered){
+      html += `<div class="explain"><span class="tag">${item.cat}</span>Correct answer: <b>${item.opts[item.correct]}</b></div>`;
+    }
+    html += `</div>`;
+  });
+
+  if(answeredCount === QUESTIONS.length){
+    const scorePct = Math.round((correctCount/QUESTIONS.length)*100);
+    const cats = [...new Set(QUESTIONS.map(q=>q.cat))];
+    const colorMap = {Process:"slate", Frameworks:"teal", SDL:"violet", Testing:"amber", Principles:"green"};
+    html += `<div class="summary">
+      <div class="eyebrow">Review Complete</div>
+      <h2>Final Score</h2>
+      <div class="score-big">${correctCount}/${QUESTIONS.length}</div>
+      <div class="score-sub">${scorePct}% correct</div>
+      <div class="breakdown">`;
+    cats.forEach(cat=>{
+      const idxs = QUESTIONS.map((q,i)=>q.cat===cat?i:-1).filter(i=>i>=0);
+      const c = idxs.filter(i=>answered[i]===QUESTIONS[i].correct).length;
+      const total = idxs.length;
+      const p = total? Math.round((c/total)*100):0;
+      const colorVar = "var(--"+(colorMap[cat]||"teal")+")";
+      html += `<div class="bd-item">
+        <div class="bd-name"><span>${cat}</span><span style="color:${colorVar}">${c}/${total}</span></div>
+        <div class="bd-bar-track"><div class="bd-bar-fill" style="width:${p}%;background:${colorVar}"></div></div>
+      </div>`;
+    });
+    html += `</div>
+      <button class="restart-btn" onclick="restart()">Retake review</button>
+    </div>`;
+  }
+
+  app.innerHTML = html;
+}
+
+function selectAnswer(qIndex, optIndex){
+  if(answered[qIndex] !== null) return;
+  answered[qIndex] = optIndex;
+  render();
+}
+
+function restart(){
+  answered = new Array(QUESTIONS.length).fill(null);
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+render();
+</script>
