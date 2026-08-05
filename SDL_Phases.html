@@ -1,0 +1,656 @@
+<div id="app">
+
+<div class="header">
+  <div class="eyebrow">Secure Software Design — Deep Study Guide</div>
+  <h1>SDL Phases, Confusion Zones &amp; Framework Reference</h1>
+  <p class="note">Built around the parts of this material that cause the most mix-ups: same activity name showing up in multiple phases, and near-identical frameworks/testing types that get confused for each other.</p>
+  <nav class="toc">
+    <a href="#flow">Phase Flow</a>
+    <a href="#phases">Phase Detail</a>
+    <a href="#confusion">Confusion Zones</a>
+    <a href="#frameworks">Frameworks</a>
+    <a href="#testing">Testing Types</a>
+    <a href="#roles">Roles</a>
+    <a href="#agile">Agile Requirements</a>
+    <a href="#terms">Terminology</a>
+    <a href="#strategy">Exam Strategy</a>
+  </nav>
+</div>
+
+<section id="flow" class="section">
+  <h2>SDL Phase Flow</h2>
+  <p class="lead">Six stages, each with an entry trigger and an exit gate. If you can name what has to be true to <i>leave</i> a phase, you can usually place any activity correctly.</p>
+  <div class="flow">
+    <div class="flow-node" style="--c:var(--teal)"><span class="flow-tag">A1</span>Security<br>Assessment</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="--c:var(--violet)"><span class="flow-tag">A2</span>Architecture</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="--c:var(--amber)"><span class="flow-tag">A3</span>Design &amp;<br>Development</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="--c:var(--green)"><span class="flow-tag">A4</span>Readiness</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="--c:var(--rose)"><span class="flow-tag">A5</span>Ship</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node" style="--c:var(--slate)"><span class="flow-tag">PRS</span>Post-Release<br>Support</div>
+  </div>
+  <table class="ref-table">
+    <tr><th>Transition</th><th>Entry Criteria</th><th>Exit Criteria</th></tr>
+    <tr><td class="mono">A1 → A2</td><td>Requirements gathered</td><td>Threat profile established</td></tr>
+    <tr><td class="mono">A2 → A3</td><td>Architecture defined</td><td>Risk mitigation plan approved</td></tr>
+    <tr><td class="mono">A3 → A4</td><td>Test plans created</td><td>Design security review complete</td></tr>
+    <tr><td class="mono">A4 → A5</td><td>Testing executed</td><td>Remediation complete</td></tr>
+    <tr><td class="mono">A5 → PRS</td><td>Final reviews passed</td><td>Product shipped</td></tr>
+  </table>
+</section>
+
+<section id="phases" class="section">
+  <h2>Phase-by-Phase Detail</h2>
+  <p class="lead">Click any phase to expand. Pay attention to the <b>competency</b> line — it tells you what the phase is actually testing you on, not just what happens in it.</p>
+
+  <details class="phase-card" style="--c:var(--teal)">
+    <summary><span class="flow-tag">A1</span> Security Assessment Phase</summary>
+    <div class="phase-body">
+      <p class="competency">Competency: <b>Assessing software requirements and risks</b></p>
+      <div class="two-col">
+        <div>
+          <h4>Success Factors</h4>
+          <ul>
+            <li>Accuracy of planned SDL activities</li>
+            <li>Product risk profile understanding</li>
+            <li>Accurate threat profile</li>
+            <li>Coverage of regulations/compliance</li>
+            <li>Security objectives coverage</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Deliverables</h4>
+          <ul>
+            <li>Product risk profile</li>
+            <li>SDL project outline</li>
+            <li>Applicable laws and regulations</li>
+            <li>Threat profile</li>
+            <li>Certification requirements</li>
+            <li>Third-party software list</li>
+            <li>Metrics template</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <details class="phase-card" style="--c:var(--violet)">
+    <summary><span class="flow-tag">A2</span> Architecture Phase</summary>
+    <div class="phase-body">
+      <p class="competency">Competency: <b>Examining security principles within the SDLC</b></p>
+      <div class="two-col">
+        <div>
+          <h4>Success Factors</h4>
+          <ul>
+            <li>Business requirements and risks identified (CIA)</li>
+            <li>Effective threat modeling</li>
+            <li>Architectural threat analysis</li>
+            <li>Risk mitigation strategy</li>
+            <li>DFD accuracy</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Deliverables</h4>
+          <ul>
+            <li>Business requirements</li>
+            <li>Threat modeling artifacts (DFDs, elements, threats)</li>
+            <li>Architecture threat analysis</li>
+            <li>Risk mitigation plan</li>
+            <li>Policy compliance analysis</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">This is where threat modeling <i>starts</i> — the DFD and initial STRIDE/DREAD pass happen here. A3 doesn't create a new one, it updates this one.</div>
+    </div>
+  </details>
+
+  <details class="phase-card" style="--c:var(--amber)">
+    <summary><span class="flow-tag">A3</span> Design &amp; Development Phase</summary>
+    <div class="phase-body">
+      <p class="competency">Competency: <b>Evaluating the software security test plan</b></p>
+      <div class="two-col">
+        <div>
+          <h4>Success Factors</h4>
+          <ul>
+            <li>Comprehensive security test plan</li>
+            <li>Effective threat modeling (continued)</li>
+            <li>Design security analysis</li>
+            <li>Privacy implementation assessment</li>
+            <li>Policy compliance review updates</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Deliverables</h4>
+          <ul>
+            <li>Updated threat modeling artifacts</li>
+            <li>Design security review</li>
+            <li>Security test plans</li>
+            <li>Updated policy compliance analysis</li>
+            <li>Privacy implementation assessment results</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">Notice the verbs: A2 <i>creates</i>, A3 <i>updates</i>. A3 also introduces the test <b>plan</b> — not execution yet. Execution is A4.</div>
+    </div>
+  </details>
+
+  <details class="phase-card" style="--c:var(--green)">
+    <summary><span class="flow-tag">A4</span> Readiness Phase</summary>
+    <div class="phase-body">
+      <p class="competency">Competency: <b>Evaluating the effectiveness of software testing</b></p>
+      <div class="two-col">
+        <div>
+          <h4>Success Factors</h4>
+          <ul>
+            <li>Security test case execution</li>
+            <li>Security testing completion</li>
+            <li>Privacy validation and remediation</li>
+            <li>Policy compliance review</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Deliverables</h4>
+          <ul>
+            <li>Security test execution report</li>
+            <li>Updated policy compliance analysis</li>
+            <li>Privacy compliance report</li>
+            <li>Security testing reports</li>
+            <li>Remediation report</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">A4 is where the plan written in A3 gets <i>run</i>. If a question mentions fuzzing, dynamic analysis, or "test case execution," it's A4.</div>
+    </div>
+  </details>
+
+  <details class="phase-card" style="--c:var(--rose)">
+    <summary><span class="flow-tag">A5</span> Ship Phase</summary>
+    <div class="phase-body">
+      <p class="competency">Final release preparation</p>
+      <div class="two-col">
+        <div>
+          <h4>Success Factors</h4>
+          <ul>
+            <li>Final policy compliance analysis</li>
+            <li>Vulnerability scanning</li>
+            <li>Penetration testing</li>
+            <li>Open-source licensing review</li>
+            <li>Final security review</li>
+            <li>Final privacy review</li>
+            <li>Customer engagement framework</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Deliverables</h4>
+          <ul>
+            <li>Updated policy compliance analysis</li>
+            <li>Security testing reports</li>
+            <li>Remediation report</li>
+            <li>Open-source licensing review report</li>
+            <li>Final security and privacy review reports</li>
+            <li>Customer engagement framework</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">Penetration testing and vulnerability scanning live here, not A4 — A4 is about executing the security <i>test plan</i>, A5 adds these final, ship-gate-specific checks.</div>
+    </div>
+  </details>
+
+  <details class="phase-card" style="--c:var(--slate)">
+    <summary><span class="flow-tag">PRS</span> Post-Release Support</summary>
+    <div class="phase-body">
+      <p class="competency">Ongoing maintenance and response — the only phase with no single "gate," since it runs for the life of the product.</p>
+      <h4>Deliverables</h4>
+      <ul>
+        <li>External vulnerability disclosure response process</li>
+        <li>Post-release certifications</li>
+        <li>Third-party security reviews</li>
+        <li>Security strategy for legacy code, M&amp;A, and EOL plans</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<section id="confusion" class="section">
+  <h2>High-Risk Confusion Zones</h2>
+  <p class="lead">These are the same term or activity reappearing across multiple phases with a different purpose each time. This is where most missed questions come from — the fix is always the same: identify the <b>phase context</b>, not just the activity name.</p>
+
+  <div class="risk-card risk-high">
+    <div class="risk-head"><span class="risk-badge">HIGH RISK</span> Threat Modeling</div>
+    <table class="ref-table small">
+      <tr><th>Phase</th><th>What's happening</th></tr>
+      <tr><td class="mono">A2</td><td>Initial modeling — DFD created, STRIDE/DREAD first pass</td></tr>
+      <tr><td class="mono">A3</td><td>Updated artifacts — same model, revised as design solidifies</td></tr>
+    </table>
+    <p class="risk-note">Separately: don't confuse the <i>tool</i> questions (STRIDE vs. PASTA vs. DREAD) with the <i>phase</i> questions above — they test different things. See the Frameworks section.</p>
+  </div>
+
+  <div class="risk-card risk-high">
+    <div class="risk-head"><span class="risk-badge">HIGH RISK</span> Policy Compliance Analysis</div>
+    <table class="ref-table small">
+      <tr><th>Phase</th><th>What's happening</th></tr>
+      <tr><td class="mono">A2</td><td>Initial analysis</td></tr>
+      <tr><td class="mono">A3</td><td>Updates, as design decisions are made</td></tr>
+      <tr><td class="mono">A4</td><td>Compliance review, against executed tests</td></tr>
+      <tr><td class="mono">A5</td><td>Final analysis, gating the ship decision</td></tr>
+    </table>
+    <p class="risk-note">Same deliverable name in all four phases — the exam relies on you tracking which stage of maturity it's in.</p>
+  </div>
+
+  <div class="risk-card risk-high">
+    <div class="risk-head"><span class="risk-badge">HIGH RISK</span> Security Testing</div>
+    <table class="ref-table small">
+      <tr><th>Phase</th><th>What's happening</th></tr>
+      <tr><td class="mono">A3</td><td>Test <b>planning</b> — writing the plan, not running it</td></tr>
+      <tr><td class="mono">A4</td><td>Test <b>execution</b> — running the plan, producing results</td></tr>
+      <tr><td class="mono">A5</td><td>Final testing — pen testing &amp; vulnerability scanning specifically</td></tr>
+    </table>
+    <p class="risk-note">Verb tense is the tell: "developing/documenting" → A3. "Executing/running" → A4. "Penetration test/vulnerability scan" → A5.</p>
+  </div>
+
+  <div class="risk-card risk-med">
+    <div class="risk-head"><span class="risk-badge">MEDIUM RISK</span> Privacy Activities</div>
+    <table class="ref-table small">
+      <tr><th>Phase</th><th>What's happening</th></tr>
+      <tr><td class="mono">A3</td><td>Implementation assessment</td></tr>
+      <tr><td class="mono">A4</td><td>Validation and remediation</td></tr>
+      <tr><td class="mono">A5</td><td>Final review</td></tr>
+    </table>
+  </div>
+
+  <div class="risk-card risk-med">
+    <div class="risk-head"><span class="risk-badge">MEDIUM RISK</span> Risk Mitigation</div>
+    <table class="ref-table small">
+      <tr><th>Phase</th><th>What's happening</th></tr>
+      <tr><td class="mono">A2</td><td>Risk mitigation <b>plan</b> is produced</td></tr>
+      <tr><td class="mono">A3</td><td>Test plans are built specifically to verify that mitigation</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="frameworks" class="section">
+  <h2>Framework Reference</h2>
+  <p class="lead">The five core frameworks, plus three supplementary models worth knowing for comparison questions.</p>
+  <table class="ref-table">
+    <tr><th>Framework</th><th>Purpose</th><th>Key Differentiator</th></tr>
+    <tr><td class="mono" style="color:var(--teal)">STRIDE</td><td>Threat categorization</td><td>Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege</td></tr>
+    <tr><td class="mono" style="color:var(--violet)">PASTA</td><td>Threat modeling process</td><td>7-stage Process for Attack Simulation and Threat Analysis, tied to business risk</td></tr>
+    <tr><td class="mono" style="color:var(--amber)">DREAD</td><td>Risk scoring</td><td>Damage, Reproducibility, Exploitability, Affected users, Discoverability (ternary scale: High=3, Med=2, Low=1)</td></tr>
+    <tr><td class="mono" style="color:var(--green)">BSIMM</td><td>Maturity assessment</td><td><b>Descriptive</b> — studies real-world security initiatives</td></tr>
+    <tr><td class="mono" style="color:var(--rose)">SAMM</td><td>Prescriptive framework</td><td><b>Prescriptive</b> — Software Assurance Maturity Model, a target roadmap</td></tr>
+  </table>
+  <p class="lead" style="margin-top:18px;">Supplementary models (useful for "which framework does X" comparison questions):</p>
+  <table class="ref-table">
+    <tr><th>Model</th><th>Structure</th></tr>
+    <tr><td class="mono">Microsoft TM</td><td>4 steps: Diagram → Identify → Mitigate → Validate</td></tr>
+    <tr><td class="mono">OCTAVE</td><td>3 phases: (1) Asset-based threat profiles, (2) Infrastructure vulnerabilities, (3) Security strategy</td></tr>
+    <tr><td class="mono">TRIKE</td><td>3 models: Requirements, Implementation, Risk</td></tr>
+  </table>
+  <div class="callout">DREAD scoring bands: <b>13–15 High</b> · <b>8–12 Medium</b> · <b>5–7 Low</b>. PASTA's design-flaw analysis specifically happens in stage 5 (Vulnerability and Weakness Analysis).</div>
+</section>
+
+<section id="testing" class="section">
+  <h2>Testing Type Reference</h2>
+  <table class="ref-table">
+    <tr><th>Type</th><th>Information Access</th><th>When Used</th></tr>
+    <tr><td class="mono">White-box</td><td>Full source code + documentation</td><td>A3 / A4 — comprehensive internal testing</td></tr>
+    <tr><td class="mono">Gray-box</td><td>Limited internal knowledge</td><td>A4 — hybrid approach</td></tr>
+    <tr><td class="mono">Black-box</td><td>No internal knowledge</td><td>A4 / A5 — external perspective testing</td></tr>
+    <tr><td class="mono">Static Analysis</td><td>Code without execution</td><td>A3 / A4 — SAST tools like SonarQube</td></tr>
+    <tr><td class="mono">Dynamic Analysis</td><td>Runtime execution</td><td>A4 / A5 — DAST tools, penetration testing</td></tr>
+  </table>
+  <p class="lead" style="margin-top:18px;">Testing categories by scope (distinct from the access-level table above):</p>
+  <table class="ref-table">
+    <tr><th>Category</th><th>Focus</th></tr>
+    <tr><td class="mono">Functional</td><td>Validates behavior against stated requirements</td></tr>
+    <tr><td class="mono">Unit</td><td>A single, isolated component</td></tr>
+    <tr><td class="mono">Integration</td><td>Multiple components working together</td></tr>
+    <tr><td class="mono">Regression</td><td>Confirms a change didn't break existing functionality</td></tr>
+  </table>
+  <div class="callout">Tool pairing to memorize: <b>SonarQube</b> → SAST / static. <b>OWASP ZAP</b> → automated DAST. <b>Burp Suite</b> → manual HTTP-level testing, often for business-logic flaws.</div>
+</section>
+
+<section id="roles" class="section">
+  <h2>Role Responsibilities</h2>
+  <table class="ref-table">
+    <tr><th>Role</th><th>Primary Function</th><th>Key Activities</th></tr>
+    <tr><td class="mono">Software Security Architect</td><td>Design secure frameworks</td><td>Creates secure coding practices and methodologies</td></tr>
+    <tr><td class="mono">Security Champion</td><td>Advocate / promote</td><td>Promotes security within development teams</td></tr>
+    <tr><td class="mono">Scrum Master</td><td>Facilitate process</td><td>Removes impediments, facilitates ceremonies</td></tr>
+    <tr><td class="mono">Software Developer</td><td>Implement features</td><td>Writes code, attends ceremonies</td></tr>
+  </table>
+</section>
+
+<section id="agile" class="section">
+  <h2>Agile SDL Requirement Types</h2>
+  <table class="ref-table">
+    <tr><th>Type</th><th>Application</th><th>Example</th></tr>
+    <tr><td class="mono">Every-sprint</td><td>Universal practices, no trigger needed</td><td>Input validation for all user input</td></tr>
+    <tr><td class="mono">Bucket</td><td>Triggered by a specific technology</td><td>RPC fuzz testing when RPC is implemented</td></tr>
+    <tr><td class="mono">One-time</td><td>Happens once, at project setup</td><td>Initial threat modeling framework</td></tr>
+    <tr><td class="mono">Final review</td><td>Gate before release</td><td>Comprehensive security assessment</td></tr>
+  </table>
+</section>
+
+<section id="terms" class="section">
+  <h2>Critical Terminology</h2>
+  <div class="term-grid">
+    <div class="term"><b>SDL vs SDLC</b><span>SDL = Security Development Lifecycle. SDLC = Software Development Lifecycle. SDL is the security layer added on top of SDLC.</span></div>
+    <div class="term"><b>CIA</b><span>Confidentiality, Integrity, Availability — not the intelligence agency.</span></div>
+    <div class="term"><b>DFD</b><span>Data Flow Diagram — the core threat-modeling artifact created in A2.</span></div>
+    <div class="term"><b>PSIRT</b><span>Product Security Incident Response Team — handles post-release vulnerability disclosures.</span></div>
+    <div class="term"><b>SAST vs DAST</b><span>Static (code, not running) vs. Dynamic (running application) Application Security Testing.</span></div>
+    <div class="term"><b>CVE</b><span>Common Vulnerabilities and Exposures — the naming system for publicly known flaws.</span></div>
+    <div class="term"><b>RBAC</b><span>Role-Based Access Control — permissions tied to a role, not an individual.</span></div>
+    <div class="term"><b>MFA</b><span>Multi-Factor Authentication — a second proof of identity beyond a password.</span></div>
+    <div class="term"><b>CSRF</b><span>Cross-Site Request Forgery — tricking an authenticated browser into submitting an unwanted request.</span></div>
+    <div class="term"><b>XSS</b><span>Cross-Site Scripting — injecting a script that executes in another user's browser.</span></div>
+  </div>
+</section>
+
+<section id="strategy" class="section">
+  <h2>Exam Success Strategy</h2>
+  <p class="lead">When a question names an activity, run it through this checklist before answering:</p>
+  <div class="strategy-grid">
+    <div class="strategy-item"><span class="strategy-num">1</span><div><b>Phase context</b><br>Same activity name, different phase = different purpose. Which phase is described?</div></div>
+    <div class="strategy-item"><span class="strategy-num">2</span><div><b>Verb tense</b><br>Planning vs. executing vs. reviewing are three different phases even for the same deliverable.</div></div>
+    <div class="strategy-item"><span class="strategy-num">3</span><div><b>Scope indicators</b><br>"Initial," "updated," and "final" map directly to A2, A3, and A5 respectively for most recurring deliverables.</div></div>
+    <div class="strategy-item"><span class="strategy-num">4</span><div><b>Role-specific responsibility</b><br>Who does what — architect designs, champion promotes, Scrum Master facilitates, developer implements.</div></div>
+    <div class="strategy-item"><span class="strategy-num">5</span><div><b>Sequential dependencies</b><br>What has to be true to exit the current phase and enter the next one?</div></div>
+  </div>
+</section>
+
+</div>
+
+<style>
+  :root{
+    --bg-deep:#0a0e13;
+    --bg-panel:#121820;
+    --bg-panel-2:#161d27;
+    --border:#212b36;
+    --text:#dde6ee;
+    --text-muted:#7d8b98;
+    --teal:#4fd1c5;
+    --violet:#a78bfa;
+    --amber:#f0a860;
+    --green:#7bc67e;
+    --rose:#e893b3;
+    --slate:#9aa7b5;
+    --danger:#e2635f;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  #app{
+    background:var(--bg-deep);
+    color:var(--text);
+    font-family:var(--sans);
+    max-width:820px;
+    margin:0 auto;
+    padding-bottom:40px;
+  }
+  .header{
+    padding:28px 24px 20px;
+    border-bottom:1px solid var(--border);
+    position:sticky;
+    top:0;
+    background:var(--bg-deep);
+    z-index:5;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:var(--mono);
+    font-size:19px;
+    margin:0 0 8px 0;
+    font-weight:600;
+    letter-spacing:-0.01em;
+  }
+  .note{
+    font-size:12.5px;
+    color:var(--text-muted);
+    line-height:1.55;
+    margin:0 0 16px 0;
+    max-width:640px;
+  }
+  .toc{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .toc a{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-muted);
+    text-decoration:none;
+    padding:5px 10px;
+    border:1px solid var(--border);
+    border-radius:20px;
+    transition:border-color 0.15s, color 0.15s;
+  }
+  .toc a:hover{border-color:var(--teal); color:var(--teal);}
+  .section{
+    padding:26px 24px;
+    border-bottom:1px solid var(--border);
+  }
+  .section h2{
+    font-family:var(--mono);
+    font-size:16px;
+    margin:0 0 10px 0;
+    font-weight:600;
+  }
+  .lead{
+    font-size:13px;
+    color:var(--text-muted);
+    line-height:1.6;
+    margin:0 0 16px 0;
+  }
+  .flow{
+    display:flex;
+    align-items:stretch;
+    gap:6px;
+    overflow-x:auto;
+    padding-bottom:16px;
+    margin-bottom:16px;
+  }
+  .flow-node{
+    flex:1;
+    min-width:88px;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-top:2px solid var(--c);
+    border-radius:8px;
+    padding:12px 10px;
+    font-size:11.5px;
+    line-height:1.4;
+    text-align:center;
+  }
+  .flow-tag{
+    display:block;
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--c);
+    margin-bottom:4px;
+    letter-spacing:0.05em;
+  }
+  .flow-arrow{
+    display:flex;
+    align-items:center;
+    color:var(--text-muted);
+    font-size:14px;
+  }
+  .ref-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12.5px;
+    margin-bottom:6px;
+  }
+  .ref-table.small{font-size:11.5px;}
+  .ref-table th{
+    text-align:left;
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--text-muted);
+    padding:8px 10px;
+    border-bottom:1px solid var(--border);
+  }
+  .ref-table td{
+    padding:9px 10px;
+    border-bottom:1px solid var(--border);
+    color:var(--text);
+    line-height:1.5;
+  }
+  .ref-table tr:last-child td{border-bottom:none;}
+  .mono{font-family:var(--mono); white-space:nowrap;}
+  .phase-card{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-left:3px solid var(--c);
+    border-radius:8px;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .phase-card summary{
+    padding:13px 16px;
+    cursor:pointer;
+    font-family:var(--mono);
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    list-style:none;
+  }
+  .phase-card summary::-webkit-details-marker{display:none;}
+  .phase-card summary .flow-tag{
+    color:var(--c);
+    margin:0;
+  }
+  .phase-body{
+    padding:4px 16px 18px;
+  }
+  .competency{
+    font-size:12.5px;
+    color:var(--text-muted);
+    margin:0 0 14px 0;
+  }
+  .two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+  .two-col h4{
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--text-muted);
+    margin:0 0 8px 0;
+  }
+  .two-col ul{
+    margin:0;
+    padding-left:18px;
+    font-size:12.5px;
+    line-height:1.7;
+  }
+  .callout{
+    margin-top:14px;
+    padding:11px 14px;
+    background:var(--bg-panel-2);
+    border-left:2px solid var(--teal);
+    border-radius:6px;
+    font-size:12px;
+    line-height:1.6;
+    color:var(--text-muted);
+  }
+  .risk-card{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .risk-high{border-left:3px solid var(--danger);}
+  .risk-med{border-left:3px solid var(--amber);}
+  .risk-head{
+    font-family:var(--mono);
+    font-size:13.5px;
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .risk-badge{
+    font-size:9.5px;
+    letter-spacing:0.06em;
+    padding:3px 8px;
+    border-radius:20px;
+    font-family:var(--mono);
+  }
+  .risk-high .risk-badge{background:rgba(226,99,95,0.15); color:var(--danger);}
+  .risk-med .risk-badge{background:rgba(240,168,96,0.15); color:var(--amber);}
+  .risk-note{
+    font-size:12px;
+    color:var(--text-muted);
+    line-height:1.55;
+    margin:10px 0 0 0;
+  }
+  .term-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .term{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:12px 14px;
+    font-size:12.5px;
+    line-height:1.5;
+  }
+  .term b{
+    display:block;
+    font-family:var(--mono);
+    color:var(--teal);
+    margin-bottom:4px;
+    font-size:12px;
+  }
+  .term span{color:var(--text-muted);}
+  .strategy-grid{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .strategy-item{
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:13px 15px;
+  }
+  .strategy-num{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--teal);
+    min-width:20px;
+  }
+  .strategy-item div{font-size:12.5px; line-height:1.6; color:var(--text-muted);}
+  .strategy-item b{color:var(--text);}
+  @media (max-width:520px){
+    .two-col{grid-template-columns:1fr;}
+    .term-grid{grid-template-columns:1fr;}
+  }
+</style>
